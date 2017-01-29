@@ -1,5 +1,5 @@
 # hf-january
-HaxeFlixel port of January by Rich Vreeland
+Disasterpeace's January, ported to HaxeFlixel by @SeiferTim
 
 January is a generative music tool. You walk around and look up to lick snowflakes with your tongue. The tool uses a set of rules to make choices about what pitch the next note (or notes) will be. It also gives the player freedom to play various types of chords, and choose when and how notes will be played. There are a bunch of advanced features, which you can explore below. It was made with Flixel and Flash/AS3.
 
