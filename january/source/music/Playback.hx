@@ -1,5 +1,8 @@
 package music;
 
+import flixel.FlxG;
+import flixel.math.FlxRandom;
+
 class Playback
 {
 
@@ -20,7 +23,7 @@ class Playback
 	/** The current attackTime amount. */
 	public static var attackTime:Float = 0;
 	/** The attackTime lengths. */
-	public static var attackTimes:Array<Float> = [0, 0.5, 1, 2];
+	public static var attackTimes:Array<Float> = [0, 0.5, 1, 2, -1];
 	/** Cycle through the playback modes. */
 	public static function cycle(direction:String = "Left"):Void
 	{
@@ -119,7 +122,7 @@ class Playback
 
 	public static function changeAttackTimes():Void {
 
-		var options:Array<String> = ["Fast", "Medium", "Slow", "Molasses"];
+		var options:Array<String> = ["Fast", "Medium", "Slow", "Molasses", "Random"];
 		attackTimeID = (attackTimeID + 1) % options.length;
 		PlayState.txtOptions.show("Attack Time: " + options[attackTimeID]);
 

@@ -1,41 +1,37 @@
 package snowflakes;
 import flixel.FlxG;
-import flixel.system.FlxSound;
 import music.Intervals;
 import music.Note;
-import openfl.utils.Object;
 
-
+/** A 'Harmony' snowflake. Plays a note, plus a harmony note. */
 class Harmony extends Snowflake {
 
 	/** Default volume level for the harmony tone (not the default note). */
 	public static var VOLUME:Float = Note.MAX_VOLUME * 0.33;
 
-	public function new()
-	{
+	public function new() {
+
 		super();
 
 		loadGraphic(AssetPaths.harmony__png, true);
-
+		animation.add("default", [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1], 6, true);
+		
 		windY = 13;
 		volume = FlxG.random.float(Note.MAX_VOLUME * 0.33, Note.MAX_VOLUME * 0.83);
-
-		animation.add("default", [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1], 6, true);
-
 		pedalAllowed = true;
 		playsNote = true;
 	}
 
-	public override function onLick():Void
-	{
+	public override function onLick():Void {
+
 		super.onLick();
 
 		playNote();
 		playHarmonyTone();
 	}
 
-	private function playHarmonyTone():Void
-	{
+	private function playHarmonyTone():Void {
+
 		var harmonyTone:String;
 		var choices:Array<String> = [];
 		var i:Map<String, String> = Intervals.loadout;
@@ -69,16 +65,11 @@ class Harmony extends Snowflake {
 		var harmony:PlayState.SoundDef;
 
 		if (SnowflakeManager.timbre == "Primary")
-		{
 			harmony = PlayState.loadSound(harmonyTone, Harmony.VOLUME, pan);
+		else {
 
-
-		}
-		else
-		{
 			var modifiedHarmony:String = "_" + harmonyTone;
 			harmony = PlayState.loadSound(modifiedHarmony, Harmony.VOLUME / SnowflakeManager._volumeMod, pan);
-
 		}
 
 		PlayState.flamNotes.push(harmony);
@@ -90,11 +81,9 @@ class Harmony extends Snowflake {
 		Note.lastHarmony = harmonyTone;
 	}
 
-	public override function update(elapsed:Float):Void
-	{
-		super.update(elapsed);
+	public override function update(elapsed:Float):Void {
 
+		super.update(elapsed);
 		animation.play("default");
 	}
-
 }

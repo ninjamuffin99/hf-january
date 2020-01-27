@@ -1,17 +1,11 @@
 package music;
-import openfl.utils.Object;
 
-typedef PentatonicDef =
-{
-	?name:String,
-	?positions:Array<Int>,
-	?logic:Array<Array<String>>
-}
+typedef PentatonicDef = { ?name:String, ?positions:Array<Int>, ?logic:Array<Array<String>> }
 
-class Scale
-{
+class Scale {
 
 	public static var MAJOR_PENTATONIC	: PentatonicDef = {name: "majorpentatonic", positions: [1, 4, 5], logic: [
+
 		/* 00 one1 */	["six1", "thr1", "fiv1", "one2", "thr2"],
 		/* 01 two1 */	["thr1", "one1", ],
 		/* 02 thr1 */	["fiv1", "thr2", "one1"],
@@ -35,7 +29,9 @@ class Scale
 						["one2", "one3"],
 		/* 21 one4 */	["one2", "thr3", "fiv3", "one3"],
 		/* 22 else */	["one2", "one3"] ]};
+
 	public static var MINOR_PENTATONIC	: PentatonicDef = {name: "minorpentatonic", positions: [1, 4], logic: [
+
 		/* 00 one1 */	["thr1", "for1", "fiv1", "sev1", "one2", "thr2", "for2", "fiv2"],
 						["one1", "one2", "one3"],
 		/* 02 thr1 */	["one1", "for1", "fiv1", "sev1", "one2", "thr2", "fiv2"],
@@ -59,6 +55,7 @@ class Scale
 		/* 20 sev3 */	["fiv3", "one4"],
 		/* 21 one4 */	["one3", "thr3", "for3", "fiv3", "sev3"],
 		/* 22 else */	["one1", "one2", "one3"] ]};
+
 	public static var isPentatonic:Bool;
 
 	public static function togglePentatonics():Void {
@@ -67,5 +64,4 @@ class Scale
 		PlayState.txtOptions.show("Pentatonics " + (isPentatonic ? "On" : "Off"));
 		HUD.logMode();
 	}
-
 }

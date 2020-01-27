@@ -7,8 +7,7 @@ import snowflakes.Small;
 import snowflakes.Transpose;
 import snowflakes.Vamp;
 
-class SnowflakeManager
-{
+class SnowflakeManager {
 
 	/** Used to store Intervals.loadout */
 	static var i:Map<String, String>;
@@ -22,8 +21,8 @@ class SnowflakeManager
 	public static var weights:Array<Float> 				= [88.5 , 3.5	, 3.5	 , 2	, 2	  , 0.5		 ];
 
 	/** Determines which snowflakes to spawn.  */
-	public static function manage():Void
-	{
+	public static function manage():Void {
+		
 		var flakeID:Class<Snowflake> = flakes[FlxG.random.weightedPick(weights)];
 		var flake:Snowflake = PlayState.snow.recycle(flakeID, null, true, true);
 		var typeName:String = Type.getClassName(flakeID);

@@ -1,8 +1,8 @@
 package snowflakes;
 import flixel.FlxG;
-import flixel.system.FlxSound;
 import music.Note;
 
+/** Plays a note, plus an octave note. */
 class Octave extends Snowflake {
 
 	/** Default volume level for the octave tone (not the default note). */
@@ -10,8 +10,8 @@ class Octave extends Snowflake {
 	/** The probability weight for spawning this flake type. */
 	public static inline var WEIGHT:Float = 3.5;
 
-	public function new()
-	{
+	public function new() {
+
 		super();
 
 		loadGraphic(AssetPaths.octave__png);
@@ -23,22 +23,22 @@ class Octave extends Snowflake {
 		playsNote = true;
 	}
 
-	public override function onLick():Void
-	{
+	public override function onLick():Void {
+
 		super.onLick();
 
 		playNote();
 		playOctave();
 	}
 
-	private function playOctave():Void
-	{
+	private function playOctave():Void {
+
 		var octaveTone:String="";
 
-		for (i in 0...Note.DATABASE.length)
-		{
-			if (Note.lastAbsolute == Note.DATABASE[i])
-			{
+		for (i in 0...Note.DATABASE.length) {
+
+			if (Note.lastAbsolute == Note.DATABASE[i]) {
+
 				while (octaveTone == "" || octaveTone == null)
 					octaveTone = Note.DATABASE[i + FlxG.random.getObject([12, -12])];
 
@@ -49,15 +49,13 @@ class Octave extends Snowflake {
 		var octave:PlayState.SoundDef;
 
 		if (SnowflakeManager.timbre == "Primary")
-		{
 			octave = PlayState.loadSound(octaveTone, Octave.VOLUME, pan);
+		else {
 
-		}
-		else
-		{
 			var modifiedNote:String = "_" + octaveTone;
 			octave = PlayState.loadSound(modifiedNote, Octave.VOLUME / SnowflakeManager._volumeMod, pan);
 		}
+
 		PlayState.flamNotes.push(octave);
 		PlayState.flamTimer = PlayState.flamRate / 1000;
 
@@ -66,5 +64,4 @@ class Octave extends Snowflake {
 		// LOGS
 		Note.lastOctave = octaveTone;
 	}
-
 }

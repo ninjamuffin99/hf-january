@@ -3,6 +3,7 @@ import flixel.FlxG;
 import music.Mode;
 import music.Note;
 
+/** A 'Chord' snowflake. Plays a chord in the current key, but in a different mode. */
 class Chord extends Snowflake {
 
 	/** Default volume level for Chord Tones. */

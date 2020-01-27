@@ -1,10 +1,10 @@
 package music;
-
 import flixel.tweens.FlxTween;
 import flixel.system.FlxSound;
+import flixel.FlxG;
 
-class Tone extends FlxSound
-{
+class Tone extends FlxSound {
+	
 	public var tween:FlxTween;
 	public var tweening:Bool;
 
@@ -12,6 +12,9 @@ class Tone extends FlxSound
 
 		if (!playing)
 			play();
+
+		if (Duration < 0)
+			Duration = FlxG.random.float(0, 2);
 
 		tween = FlxTween.num(0, To, Duration, {onStart:onFadeStart, onComplete:onFadeComplete}, volumeTween);
 		return this;

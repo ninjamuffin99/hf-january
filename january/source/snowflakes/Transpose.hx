@@ -1,15 +1,13 @@
 package snowflakes;
 import flixel.FlxG;
-import flixel.system.FlxSound;
-import music.Intervals;
 import music.Key;
 import music.Mode;
 import music.Note;
 
+/** A snowflake that plays a chord in a new key and mode. */
 class Transpose extends Snowflake {
 
-	public function new()
-	{
+	public function new() {
 		super();
 
 		loadGraphic(AssetPaths.transpose__png, true, 5, 6);
@@ -21,8 +19,7 @@ class Transpose extends Snowflake {
 		volume = FlxG.random.float(Note.MAX_VOLUME * 0.33, Note.MAX_VOLUME * 0.83);
 	}
 
-	public override function onLick():Void
-	{
+	public override function onLick():Void {
 		super.onLick();
 
 		Mode.change();
@@ -44,13 +41,13 @@ class Transpose extends Snowflake {
 		var newKey:Array<String> = Key.current == "C Major" ? Key.C_MAJOR : Key.C_MINOR;
 
 		// Run through all sounds.
-		for (sound in PlayState.sounds)
-		{
+		for (sound in PlayState.sounds) {
+
 			var noteOk:Bool = false;
 
 			// If the sound has volume,
-			if (sound.note != null && sound.note.active == true)
-			{
+			if (sound.note != null && sound.note.active == true) {
+				
 				// Compare to current key notes.
 				for (note in newKey) {
 

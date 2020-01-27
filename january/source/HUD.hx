@@ -10,11 +10,11 @@ import music.MIDI;
 import music.Mode;
 import music.Note;
 import music.Scale;
-import openfl.display.StageDisplayState;
 import openfl.events.MouseEvent;
 
-class HUD
-{
+/** Class that manages all text generation. */
+class HUD {
+
 	/** The text sprite that holds note name, volume, pan, etc. */
 	public static var row1:FlxText;
 	/** The text sprite that holds mode type, chord tones, etc. */
@@ -31,13 +31,14 @@ class HUD
 	/** Regular Expression used to find "s" for sharp. */
 	private static var findSharp:EReg = ~/\s*[s]/g;
 
-	// quit prompt stuff
+	/** Quit Prompt Sprite. */
 	public static var promptBack:FlxSprite;
+	/** Quit Prompt Text. */
 	public static var promptText:FlxText;
 
 	/** Sets up HUD! does everything but add it to the state. */
-	public static function init():Void
-	{
+	public static function init():Void {
+
 		row1 = new FlxText(4, -1, 256, "");
 		row2 = new FlxText(4, 9, 256, "");
 		row3 = new FlxText(4, 19, 256, "");
@@ -68,6 +69,7 @@ class HUD
 		row1.exists = row2.exists = row3.exists = !row3.exists;
 	}
 
+	/** Called when the MIDI Export Button is toggled. */
 	public static function midi():Void {
 
 		#if !FLX_NO_MOUSE
@@ -161,6 +163,12 @@ class HUD
 		}
 	}
 
+	/**
+	 *  Helper function for converting Sharp note names to flat note names. ie 'Cs3' -> 'Db3'
+	 * @param text 
+	 * @param octave whether or not to keep the octave in the string.
+	 * @return String
+	 */
 	public static function enharmonic(text:String, octave:Bool = false):String {
 
 		var oct:String = text.charAt(text.length - 1);
@@ -187,16 +195,19 @@ class HUD
 		return text;
 	}
 
+	/** Explicitly hide the HUD. Not currently in use. */
 	private static function hide():Void {
 
 		row1.exists = row2.exists = row3.exists = false;
 	}
 
+	/** Show the prompt for quitting. */
 	public static function promptExit():Void {
 
 		promptBack.exists = promptText.exists = true;
 	}
 
+	/** Hide the prompt for quitting. */
 	public static function hideExit():Void {
 
 		promptBack.exists = promptText.exists = false;

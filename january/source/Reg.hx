@@ -1,20 +1,11 @@
 package;
 
+import flixel.math.FlxVector;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
-import flixel.input.gamepad.FlxGamepad;
-import flixel.input.gamepad.FlxGamepadAnalogStick;
-import flixel.input.gamepad.FlxGamepadButton;
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.keyboard.FlxKey;
-import flixel.input.keyboard.FlxKeyList;
 import openfl.Assets;
 
-import flixel.util.FlxSave;
-using flixel.util.FlxArrayUtil;
-
-class Reg
-{
+class Reg {
 
 	public static var score:Int = 0;
 
@@ -106,72 +97,45 @@ class Reg
 	public static inline var DEADZONE:Float = .2;
 	#end
 
-
-
 	#if !FLX_NO_KEYBOARD
-	public static function changeKey(ActIndex:Int, ChangeTo:String):Void
-	{
+	public static function changeKey(ActIndex:Int, ChangeTo:String):Void {
+
 		ChangeTo = StringTools.trim(ChangeTo);
 		ActionsKeys[ActIndex] = [];
 		var s:EReg = ~/,[\s]*/;
 		var splits:Array<String> = s.split(ChangeTo);
+
 		for (r in splits)
-		{
 			ActionsKeys[ActIndex].push(r);
-		}
 	}
 	#end
 
 	#if !FLX_NO_GAMEPAD
-	public static function stickCheck():Void
-	{
-		if (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) < -DEADZONE)
-			wasLeftStickX = -1;
-		else if (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) > DEADZONE)
-			wasLeftStickX = 1;
-		else
-			wasLeftStickX = 0;
+	public static function stickCheck():Void {
 
+		var axesL:FlxVector = FlxG.gamepads.lastActive.getAnalogAxes(LEFT_ANALOG_STICK);
+		var axesR:FlxVector = FlxG.gamepads.lastActive.getAnalogAxes(RIGHT_ANALOG_STICK);
 
-		if (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) < -DEADZONE)
-			wasLeftStickY = -1;
-		else if (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) > DEADZONE)
-			wasLeftStickY = 1;
-		else
-			wasLeftStickY = 0;
-
-		if (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) < -DEADZONE)
-			wasRightStickX = -1;
-		else if (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) > DEADZONE)
-			wasRightStickX = 1;
-		else
-			wasRightStickX = 0;
-
-
-		if (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) < -DEADZONE)
-			wasRightStickY = -1;
-		else if (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) > DEADZONE)
-			wasRightStickY = 1;
-		else
-			wasRightStickY = 0;
-
+		wasLeftStickX  = axesL.x < -DEADZONE ? -1 : axesL.x > DEADZONE ? 1 : 0;
+		wasLeftStickY  = axesL.y < -DEADZONE ? -1 : axesL.y > DEADZONE ? 1 : 0;
+		wasRightStickX = axesR.x < -DEADZONE ? -1 : axesR.x > DEADZONE ? 1 : 0;
+		wasRightStickY = axesR.y < -DEADZONE ? -1 : axesR.y > DEADZONE ? 1 : 0;
 	}
 
-	public static function changeButton(ActIndex:Int, ChangeTo:String):Void
-	{
+	public static function changeButton(ActIndex:Int, ChangeTo:String):Void {
+
 		ChangeTo = StringTools.trim(ChangeTo);
 		ActionsButtons[ActIndex] = [];
 		var s:EReg = ~/,[\s]*/;
 		var splits:Array<String> = s.split(ChangeTo);
+		
 		for (r in splits)
-		{
 			ActionsButtons[ActIndex].push(r);
-		}
 	}
 	#end
 
-	public static function initControls():Void
-	{
+	public static function initControls():Void {
+
 		// we need to do some complicated file reading and parsing things here
 
 		#if !FLX_NO_KEYBOARD
@@ -200,6 +164,7 @@ class Reg
 		ActionsKeys.push(KEY_DEFAULT_REVERSE);
 		ActionsKeys.push(KEY_DEFAULT_ANY);
 		#end
+
 		#if !FLX_NO_GAMEPAD
 		ActionsButtons = [];
 		ActionsButtons.push(BTN_DEFAULT_PLAYER_MOVE_L);
@@ -227,267 +192,194 @@ class Reg
 		ActionsButtons.push(BTN_DEFAULT_ANY);
 		#end
 
-
-
 		#if !flash
 		var strConfig:String = Assets.getText("config/Controls.cfg");
 		var match:EReg = ~/^([A-Z_]*)\s+=\s+([A-Z_,\s]*)$/gm;
-		match.map(strConfig, function(r) {
-			switch(r.matched(1))
-			{
-				#if !FLX_NO_KEYBOARD
-				case "KEY_PLAYER_MOVE_L":
-					changeKey(ACT_PLAYER_MOVE_L, r.matched(2));
-				case "KEY_PLAYER_MOVE_R":
-					changeKey(ACT_PLAYER_MOVE_R, r.matched(2));
-				case "KEY_TONGUE_OUT":
-					changeKey(ACT_TONGUE_OUT, r.matched(2));
-				case "KEY_TONGUE_IN":
-					changeKey(ACT_TONGUE_IN, r.matched(2));
-				case "KEY_AUTOPILOT":
-					changeKey(ACT_AUTOPILOT, r.matched(2));
-				case "KEY_IMPROV":
-					changeKey(ACT_IMPROV, r.matched(2));
-				case "KEY_GAMEMODE_L":
-					changeKey(ACT_GAMEMODE_L, r.matched(2));
-				case "KEY_GAMEMODE_R":
-					changeKey(ACT_GAMEMODE_R, r.matched(2));
-				case "KEY_MUSICMODE_L":
-					changeKey(ACT_MUSICMODE_L, r.matched(2));
-				case "KEY_MUSICMODE_R":
-					changeKey(ACT_MUSICMODE_R, r.matched(2));
-				case "KEY_HUD":
-					changeKey(ACT_HUD, r.matched(2));
-				case "KEY_ATTACK_TIME":
-					changeKey(ACT_ATTACK_TIME, r.matched(2));
-				case "KEY_RESET":
-					changeKey(ACT_RESET, r.matched(2));
-				case "KEY_PEDALPOINT":
-					changeKey(ACT_PEDALPOINT, r.matched(2));
-				case "KEY_PENTATONICS":
-					changeKey(ACT_PENTATONICS, r.matched(2));
-				case "KEY_SPEEDUP":
-					changeKey(ACT_SPEEDUP, r.matched(2));
-				case "KEY_CHANGEKEY":
-					changeKey(ACT_CHANGEKEY, r.matched(2));
-				case "KEY_SNOW_FREQ":
-					changeKey(ACT_SNOW_FREQ, r.matched(2));
-				case "KEY_NOTE_LENGTH":
-					changeKey(ACT_NOTE_LENGTH, r.matched(2));
-				case "KEY_NOTE_NAMES":
-					changeKey(ACT_NOTE_NAMES, r.matched(2));
-				case "KEY_SAVE":
-					changeKey(ACT_SAVE, r.matched(2));
-				case "KEY_REVERSE":
-					changeKey(ACT_REVERSE, r.matched(2));
-				#end
-				#if !FLX_NO_GAMEPAD
-				case "BTN_PLAYER_MOVE_L":
-					changeButton(ACT_PLAYER_MOVE_L, r.matched(2));
-				case "BTN_PLAYER_MOVE_R":
-					changeButton(ACT_PLAYER_MOVE_R, r.matched(2));
-				case "BTN_TONGUE_OUT":
-					changeButton(ACT_TONGUE_OUT, r.matched(2));
-				case "BTN_TONGUE_IN":
-					changeButton(ACT_TONGUE_IN, r.matched(2));
-				case "BTN_AUTOPILOT":
-					changeButton(ACT_AUTOPILOT, r.matched(2));
-				case "BTN_IMPROV":
-					changeButton(ACT_IMPROV, r.matched(2));
-				case "BTN_GAMEMODE_L":
-					changeButton(ACT_GAMEMODE_L, r.matched(2));
-				case "BTN_GAMEMODE_R":
-					changeButton(ACT_GAMEMODE_R, r.matched(2));
-				case "BTN_MUSICMODE_L":
-					changeButton(ACT_MUSICMODE_L, r.matched(2));
-				case "BTN_MUSICMODE_R":
-					changeButton(ACT_MUSICMODE_R, r.matched(2));
-				case "BTN_HUD":
-					changeButton(ACT_HUD, r.matched(2));
-				case "BTN_ATTACK_TIME":
-					changeButton(ACT_ATTACK_TIME, r.matched(2));
-				case "BTN_RESET":
-					changeButton(ACT_RESET, r.matched(2));
-				case "BTN_PEDALPOINT":
-					changeButton(ACT_PEDALPOINT, r.matched(2));
-				case "BTN_PENTATONICS":
-					changeButton(ACT_PENTATONICS, r.matched(2));
-				case "BTN_SPEEDUP":
-					changeButton(ACT_SPEEDUP, r.matched(2));
-				case "BTN_CHANGEKEY":
-					changeButton(ACT_CHANGEKEY, r.matched(2));
-				case "BTN_SNOW_FREQ":
-					changeButton(ACT_SNOW_FREQ, r.matched(2));
-				case "BTN_NOTE_LENGTH":
-					changeButton(ACT_NOTE_LENGTH, r.matched(2));
-				case "BTN_NOTE_NAMES":
-					changeButton(ACT_NOTE_NAMES, r.matched(2));
-				case "BTN_SAVE":
-					changeButton(ACT_SAVE, r.matched(2));
-				case "BTN_REVERSE":
-					changeButton(ACT_REVERSE, r.matched(2));
-				#end
-				default:
 
+		match.map(strConfig, function(r) {
+			
+			switch(r.matched(1)) {
+
+				#if !FLX_NO_KEYBOARD
+				case "KEY_PLAYER_MOVE_L":	changeKey(ACT_PLAYER_MOVE_L, r.matched(2));
+				case "KEY_PLAYER_MOVE_R":	changeKey(ACT_PLAYER_MOVE_R, r.matched(2));
+				case "KEY_TONGUE_OUT":		changeKey(ACT_TONGUE_OUT, r.matched(2));
+				case "KEY_TONGUE_IN":		changeKey(ACT_TONGUE_IN, r.matched(2));
+				case "KEY_AUTOPILOT":		changeKey(ACT_AUTOPILOT, r.matched(2));
+				case "KEY_IMPROV":			changeKey(ACT_IMPROV, r.matched(2));
+				case "KEY_GAMEMODE_L":		changeKey(ACT_GAMEMODE_L, r.matched(2));
+				case "KEY_GAMEMODE_R":		changeKey(ACT_GAMEMODE_R, r.matched(2));
+				case "KEY_MUSICMODE_L":		changeKey(ACT_MUSICMODE_L, r.matched(2));
+				case "KEY_MUSICMODE_R":		changeKey(ACT_MUSICMODE_R, r.matched(2));
+				case "KEY_HUD":				changeKey(ACT_HUD, r.matched(2));
+				case "KEY_ATTACK_TIME":		changeKey(ACT_ATTACK_TIME, r.matched(2));
+				case "KEY_RESET":			changeKey(ACT_RESET, r.matched(2));
+				case "KEY_PEDALPOINT":		changeKey(ACT_PEDALPOINT, r.matched(2));
+				case "KEY_PENTATONICS":		changeKey(ACT_PENTATONICS, r.matched(2));
+				case "KEY_SPEEDUP":			changeKey(ACT_SPEEDUP, r.matched(2));
+				case "KEY_CHANGEKEY":		changeKey(ACT_CHANGEKEY, r.matched(2));
+				case "KEY_SNOW_FREQ":		changeKey(ACT_SNOW_FREQ, r.matched(2));
+				case "KEY_NOTE_LENGTH":		changeKey(ACT_NOTE_LENGTH, r.matched(2));
+				case "KEY_NOTE_NAMES":		changeKey(ACT_NOTE_NAMES, r.matched(2));
+				case "KEY_SAVE":			changeKey(ACT_SAVE, r.matched(2));
+				case "KEY_REVERSE":			changeKey(ACT_REVERSE, r.matched(2));
+				#end
+				
+				#if !FLX_NO_GAMEPAD
+				case "BTN_PLAYER_MOVE_L":	changeButton(ACT_PLAYER_MOVE_L, r.matched(2));
+				case "BTN_PLAYER_MOVE_R":	changeButton(ACT_PLAYER_MOVE_R, r.matched(2));
+				case "BTN_TONGUE_OUT":		changeButton(ACT_TONGUE_OUT, r.matched(2));
+				case "BTN_TONGUE_IN":		changeButton(ACT_TONGUE_IN, r.matched(2));
+				case "BTN_AUTOPILOT":		changeButton(ACT_AUTOPILOT, r.matched(2));
+				case "BTN_IMPROV":			changeButton(ACT_IMPROV, r.matched(2));
+				case "BTN_GAMEMODE_L":		changeButton(ACT_GAMEMODE_L, r.matched(2));
+				case "BTN_GAMEMODE_R":		changeButton(ACT_GAMEMODE_R, r.matched(2));
+				case "BTN_MUSICMODE_L":		changeButton(ACT_MUSICMODE_L, r.matched(2));
+				case "BTN_MUSICMODE_R":		changeButton(ACT_MUSICMODE_R, r.matched(2));
+				case "BTN_HUD":				changeButton(ACT_HUD, r.matched(2));
+				case "BTN_ATTACK_TIME":		changeButton(ACT_ATTACK_TIME, r.matched(2));
+				case "BTN_RESET":			changeButton(ACT_RESET, r.matched(2));
+				case "BTN_PEDALPOINT":		changeButton(ACT_PEDALPOINT, r.matched(2));
+				case "BTN_PENTATONICS":		changeButton(ACT_PENTATONICS, r.matched(2));
+				case "BTN_SPEEDUP":			changeButton(ACT_SPEEDUP, r.matched(2));
+				case "BTN_CHANGEKEY":		changeButton(ACT_CHANGEKEY, r.matched(2));
+				case "BTN_SNOW_FREQ":		changeButton(ACT_SNOW_FREQ, r.matched(2));
+				case "BTN_NOTE_LENGTH":		changeButton(ACT_NOTE_LENGTH, r.matched(2));
+				case "BTN_NOTE_NAMES":		changeButton(ACT_NOTE_NAMES, r.matched(2));
+				case "BTN_SAVE":			changeButton(ACT_SAVE, r.matched(2));
+				case "BTN_REVERSE":			changeButton(ACT_REVERSE, r.matched(2));
+				#end
+
+				default:
 			}
+
 			return '';
 		});
-
 		#end
 	}
 
-	public static function inputPressed(Input:Int):Bool
-	{
+	public static function inputPressed(Input:Int):Bool {
+
 		var isPressed:Bool = false;
 
 		#if !FLX_NO_KEYBOARD
 		for (s in ActionsKeys[Input])
-		{
-			if (s == "ANY")
-				isPressed = isPressed || FlxG.keys.pressed.ANY;
-			else
-				isPressed = isPressed || FlxG.keys.checkStatus(FlxKey.fromString(s), FlxInputState.PRESSED);
-		}
-
+			isPressed = isPressed || (s == "ANY" ? FlxG.keys.pressed.ANY : FlxG.keys.checkStatus(FlxKey.fromString(s), FlxInputState.PRESSED));
 		#end
-		#if !FLX_NO_GAMEPAD
-		if (FlxG.gamepads.lastActive != null)
-		{
-			var any:Bool = false;
-			for (s in ActionsButtons[Input])
-			{
-				switch (s)
-				{
-					case "LEFT_STICK_X_NEG":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) < -DEADZONE;
-					case "LEFT_STICK_X_POS":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) > DEADZONE;
-					case "LEFT_STICK_Y_NEG":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) < -DEADZONE;
-					case "LEFT_STICK_Y_POS":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) > DEADZONE;
-					case "RIGHT_STICK_X_NEG":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) < -DEADZONE;
-					case "RIGHT_STICK_X_POS":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) > DEADZONE;
-					case "RIGHT_STICK_Y_NEG":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) < -DEADZONE;
-					case "RIGHT_STICK_Y_POS":
-						any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) > DEADZONE;
-					case "ANY":
 
-					default:
+		#if !FLX_NO_GAMEPAD
+		if (FlxG.gamepads.lastActive != null) {
+
+			var any:Bool = false;
+			
+			for (s in ActionsButtons[Input]) {
+
+				switch (s) {
+
+					case "LEFT_STICK_X_NEG":  any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) < -DEADZONE;
+					case "LEFT_STICK_X_POS":  any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) > DEADZONE;
+					case "LEFT_STICK_Y_NEG":  any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) < -DEADZONE;
+					case "LEFT_STICK_Y_POS":  any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) > DEADZONE;
+					case "RIGHT_STICK_X_NEG": any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) < -DEADZONE;
+					case "RIGHT_STICK_X_POS": any = isPressed = isPressed || FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) > DEADZONE;
+					case "RIGHT_STICK_Y_NEG": any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) < -DEADZONE;
+					case "RIGHT_STICK_Y_POS": any = isPressed = isPressed || FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) > DEADZONE;
+					case "ANY": // note cases never fall through in Haxe.
+					default   :
 						isPressed = isPressed || FlxG.gamepads.lastActive.checkStatus(FlxGamepadInputID.fromString(s), FlxInputState.PRESSED);
 				}
+
 				if (s == "ANY")
 					isPressed = isPressed || FlxG.gamepads.lastActive.pressed.ANY || any;
 			}
 		}
 		#end
-		return isPressed;
 
+		return isPressed;
 	}
 
-	public static function inputJustPressed(Input:Int):Bool
-	{
+	public static function inputJustPressed(Input:Int):Bool {
+
 		var isPressed:Bool = false;
 
 		#if !FLX_NO_KEYBOARD
-		for (s in ActionsKeys[Input])
-		{
+		for (s in ActionsKeys[Input]) {
+
 			if (s == "ANY")
 				isPressed = isPressed || FlxG.keys.justPressed.ANY;
 			else
 				isPressed = isPressed || FlxG.keys.checkStatus(FlxKey.fromString(s), FlxInputState.JUST_PRESSED);
 		}
 		#end
+
 		#if !FLX_NO_GAMEPAD
-		if (FlxG.gamepads.lastActive != null)
-		{
+		if (FlxG.gamepads.lastActive != null) {
+
 			var any:Bool = false;
-			for (s in ActionsButtons[Input])
-			{
-				switch (s)
-				{
-					case "LEFT_STICK_X_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) < -DEADZONE && wasLeftStickX == 0);
-					case "LEFT_STICK_X_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) > DEADZONE && wasLeftStickX == 0);
-					case "LEFT_STICK_Y_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) < -DEADZONE && wasLeftStickY == 0);
-					case "LEFT_STICK_Y_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) > DEADZONE && wasLeftStickY == 0);
-					case "RIGHT_STICK_X_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) < -DEADZONE && wasRightStickX == 0);
-					case "RIGHT_STICK_X_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) > DEADZONE && wasRightStickX == 0);
-					case "RIGHT_STICK_Y_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) < -DEADZONE && wasRightStickY == 0);
-					case "RIGHT_STICK_Y_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) > DEADZONE && wasRightStickY == 0);
+
+			for (s in ActionsButtons[Input]) {
+
+				switch (s) {
+
+					case "LEFT_STICK_X_NEG":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) < -DEADZONE && wasLeftStickX == 0);
+					case "LEFT_STICK_X_POS":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) > DEADZONE && wasLeftStickX == 0);
+					case "LEFT_STICK_Y_NEG":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) < -DEADZONE && wasLeftStickY == 0);
+					case "LEFT_STICK_Y_POS":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) > DEADZONE && wasLeftStickY == 0);
+					case "RIGHT_STICK_X_NEG": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) < -DEADZONE && wasRightStickX == 0);
+					case "RIGHT_STICK_X_POS": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) > DEADZONE && wasRightStickX == 0);
+					case "RIGHT_STICK_Y_NEG": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) < -DEADZONE && wasRightStickY == 0);
+					case "RIGHT_STICK_Y_POS": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) > DEADZONE && wasRightStickY == 0);
 					case "ANY":
 
 					default:
 						isPressed = isPressed || FlxG.gamepads.lastActive.checkStatus(FlxGamepadInputID.fromString(s), FlxInputState.JUST_PRESSED);
 				}
+
 				if (s == "ANY")
 					isPressed = isPressed || FlxG.gamepads.lastActive.justPressed.ANY || any;
 			}
 		}
 		#end
+
 		return isPressed;
 	}
 
-	public static function inputJustReleased(Input:Int):Bool
-	{
+	public static function inputJustReleased(Input:Int):Bool {
+
 		var isPressed:Bool = false;
 
 		#if !FLX_NO_KEYBOARD
 		for (s in ActionsKeys[Input])
-		{
-			if (s == "ANY")
-				isPressed = isPressed || FlxG.keys.justReleased.ANY;
-			else
-				isPressed = isPressed || FlxG.keys.checkStatus(FlxKey.fromString(s), FlxInputState.JUST_RELEASED);
-		}
-
+			isPressed = isPressed || (s == "ANY" ? FlxG.keys.justReleased.ANY : FlxG.keys.checkStatus(FlxKey.fromString(s), FlxInputState.JUST_RELEASED));
 		#end
-		#if !FLX_NO_GAMEPAD
-		if (FlxG.gamepads.lastActive != null)
-		{
-			var any:Bool = false;
-			for (s in ActionsButtons[Input])
-			{
-				switch (s)
-				{
-					case "LEFT_STICK_X_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) == 0 && wasLeftStickX < 0);
-					case "LEFT_STICK_X_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK) == 0 && wasLeftStickX > 0);
-					case "LEFT_STICK_Y_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) == 0 && wasLeftStickY < 0);
-					case "LEFT_STICK_Y_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK) == 0 && wasLeftStickY > 0);
-					case "RIGHT_STICK_X_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickX < 0);
-					case "RIGHT_STICK_X_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickX > 0);
-					case "RIGHT_STICK_Y_NEG":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickY < 0);
-					case "RIGHT_STICK_Y_POS":
-						any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickY > 0);
-					case "ANY":
 
-					default:
-						isPressed = isPressed || FlxG.gamepads.lastActive.checkStatus(FlxGamepadInputID.fromString(s), FlxInputState.JUST_RELEASED);
+		#if !FLX_NO_GAMEPAD
+		if (FlxG.gamepads.lastActive != null) {
+
+			var any:Bool = false;
+			
+			for (s in ActionsButtons[Input]) {
+
+				switch (s) {
+
+					case "LEFT_STICK_X_NEG":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK)  == 0 && wasLeftStickX < 0);
+					case "LEFT_STICK_X_POS":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(LEFT_ANALOG_STICK)  == 0 && wasLeftStickX > 0);
+					case "LEFT_STICK_Y_NEG":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK)  == 0 && wasLeftStickY < 0);
+					case "LEFT_STICK_Y_POS":  any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(LEFT_ANALOG_STICK)  == 0 && wasLeftStickY > 0);
+					case "RIGHT_STICK_X_NEG": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickX < 0);
+					case "RIGHT_STICK_X_POS": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getXAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickX > 0);
+					case "RIGHT_STICK_Y_NEG": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickY < 0);
+					case "RIGHT_STICK_Y_POS": any = isPressed = isPressed || (FlxG.gamepads.lastActive.getYAxis(RIGHT_ANALOG_STICK) == 0 && wasRightStickY > 0);
+					case "ANY":
+					default   : isPressed = isPressed || FlxG.gamepads.lastActive.checkStatus(FlxGamepadInputID.fromString(s), FlxInputState.JUST_RELEASED);
 				}
+
 				if (s == "ANY")
 					isPressed = isPressed || FlxG.gamepads.lastActive.justReleased.ANY || any;
 			}
 		}
 		#end
+
 		return isPressed;
 	}
-
-
 }

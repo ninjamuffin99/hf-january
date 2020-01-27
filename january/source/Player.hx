@@ -1,14 +1,10 @@
 package;
 
-import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.system.FlxAssets.FlxGraphicAsset;
+import flixel.FlxG;
 
-class Player extends FlxSprite
-{
-
-	//[Embed(source="../assets/art/player1.png")] private var sprite: Class;
+class Player extends FlxSprite {
 
 	/** Initial Player X Position. */
 	public static inline var X_INIT:Int = 20;
@@ -18,11 +14,10 @@ class Player extends FlxSprite
 	private var stopped:Bool = false;
 	/** Whether the player's tongue is up. */
 	public var tongueUp:Bool = false;
-
-	private var wasMoving:Bool = false;
 	
-	public function new()
-	{
+	/** constructor */
+	public function new() {
+
 		x = X_INIT;
 		y = 79;
 
@@ -45,51 +40,49 @@ class Player extends FlxSprite
 		animation.add("tongueDown", [4,3,2,0], 18, false);
 		animation.add("walk", [33,35,37,7,9,11,13,15,17,19,21,23,25,27,29,31], 12);
 		animation.add("walkTongue", [66,68,70,40,42,44,46,48,50,52,54,56,58,60,62,64], 12);
+
+		animation.add("run", animation.getByName("walk").frames, 16);
+		animation.add("runTongue", animation.getByName("walkTongue").frames, 16);
 	}
 
-	override public function update(elapsed:Float):Void
-	{
+	override public function update(elapsed:Float):Void {
+
 		//////////////
 		// MOVEMENT //
 		//////////////
 
 		acceleration.x = 0;
-		
+		maxVelocity.x  = Reg.inputPressed(Reg.ACT_SPEEDUP) ? 55 : 35;
 
-		if ( (animation.frameIndex >= 11 && animation.frameIndex <= 14) || (animation.frameIndex >= 27 && animation.frameIndex <= 31) || (animation.frameIndex >= 44 && animation.frameIndex <= 47) || (animation.frameIndex >= 60 && animation.frameIndex <= 64) )
-			maxVelocity.x = 20;
-		else
-			maxVelocity.x = 40;
-
-    if (Reg.inputPressed(Reg.ACT_SPEEDUP))
-			maxVelocity.x = 60;
+		// slow down during certain parts of the walk cycle.
+		if ((animation.frameIndex > 10 && animation.frameIndex < 15) ||
+			(animation.frameIndex > 26 && animation.frameIndex < 32) ||
+			(animation.frameIndex > 43 && animation.frameIndex < 48) ||
+			(animation.frameIndex > 59 && animation.frameIndex < 65))
+			maxVelocity.x -= 15;
 		
-			
-		var left:Bool = false;
-		var right:Bool = false;
+		var left: Bool = Reg.inputPressed(Reg.ACT_PLAYER_MOVE_L) || (PlayState.onAutoPilot && PlayState.autoPilotMovement == "Left");
+		var right:Bool = Reg.inputPressed(Reg.ACT_PLAYER_MOVE_R) || (PlayState.onAutoPilot && PlayState.autoPilotMovement == "Right");
 		
-		left = left || Reg.inputPressed(Reg.ACT_PLAYER_MOVE_L) || (PlayState.onAutoPilot && PlayState.autoPilotMovement == "Left");
-		right = right || Reg.inputPressed(Reg.ACT_PLAYER_MOVE_R) || (PlayState.onAutoPilot && PlayState.autoPilotMovement == "Right");
+		// stand still if pressing both left and right.
 		if ((left && right) || (PlayState.onAutoPilot && PlayState.autoPilotMovement == "Still"))
 			left = right = false;
 			
-		if (left)
-		{
+		if (left) {
+
 			facing = FlxObject.LEFT;
 			SnowflakeManager.timbre = "Secondary";
 			velocity.x = -maxVelocity.x;
-			wasMoving = true;
 		}
-		else if (right)
-		{
+		else if (right) {
+
 			facing = FlxObject.RIGHT;
 			SnowflakeManager.timbre = "Primary";
 			velocity.x = maxVelocity.x;
-			wasMoving = true;
 		}
-		if (wasMoving && !left && !right)
-		{
-			wasMoving = false;
+
+		if (!left && !right) {
+
 			drag.x = 100;
 			stopped = true;
 		}
@@ -98,58 +91,41 @@ class Player extends FlxSprite
 		// ANIMATION //
 		///////////////
 
-		var up:Bool = Reg.inputPressed(Reg.ACT_TONGUE_OUT); 
+		var up:Bool   = Reg.inputPressed(Reg.ACT_TONGUE_OUT); 
 		var down:Bool = Reg.inputPressed(Reg.ACT_TONGUE_IN);
 
-		if (velocity.x != 0)
-		{
-			if (tongueUp == false)
-				animation.play("walk");
-			else
-				animation.play("walkTongue");
+		if (velocity.x != 0) {
 
-			if (up)
-				tongueUp = true;
-			else if (down)
-				tongueUp = false;
+			var animPrefix:String = Reg.inputPressed(Reg.ACT_SPEEDUP) ? "run" : "walk";
+
+			animation.play(tongueUp ? animPrefix + "Tongue" : animPrefix);
+
+			// tongue changes are toggle based.
+			tongueUp = up ? true : down ? false : tongueUp;
 		}
-		else	// if player velocity is 0
-		{
-			if (tongueUp == false && up)	// and still looking up
-			{
+		else { // if player velocity is 0
+
+			// and still looking up
+			if (tongueUp == false && up) {
+
 				animation.play("tongueUp",true);
 				tongueUp = true;
 			}
-			else if (tongueUp == true && down)
-			{
+			else if (tongueUp == true && down) {
+
 				animation.play("tongueDown",true);
 				tongueUp = false;
 			}
 
 			if (stopped == true)
-			{
-				if (tongueUp == false)
-				{
-					animation.play("idle");
-				}
-				else
-				{
-					animation.play("tongueUpStopped");
-				}
-			}
+				animation.play(tongueUp ? "tongueUpStopped" : "idle");
+
 			stopped = false;
 		}
 
 		super.update(elapsed);
 
-		////////////////
-		// COLLISIONS //
-		////////////////
-
-		if (x < (-1*width))
-			x = FlxG.width;
-		else if (x > (FlxG.width + width))
-			x = -1*(width);
+		// wrap player around the screen.
+		x = x < -1 * width ? FlxG.width : x > FlxG.width + width ? -1 * width : x;
 	}
-
 }

@@ -5,13 +5,14 @@ import flixel.FlxState;
 import flixel.text.FlxText;
 import flixel.util.FlxDestroyUtil;
 
+/** State for the initial start up menu. */
 class MenuState extends FlxState {
 
 	private static var yesText:FlxText;
 	private static var leaving:Bool = false;
 
-	override public function create():Void
-	{
+	override public function create():Void {
+
 		bgColor = 0xFF000000; //0xFF75899C;
 
 		#if !FLX_NO_MOUSE
@@ -55,7 +56,6 @@ class MenuState extends FlxState {
 
 		if (Reg.inputJustReleased(Reg.ACT_ANY))
 			newState();
-
 
 		#if !FLX_NO_MOUSE
 		if (FlxG.mouse.justReleased)

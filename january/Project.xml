@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-	<!------------------------------APPLICATION SETTINGS---------------------------->
+	<!-- _________________________ Application Settings _________________________ -->
 
-	<app title="January" file="january" main="Main" version="1.0" company="HaxeFlixel" />
+	<app title="January" file="January" main="Main" version="0.0.1" company="Disasterpeace" />
 
 	<!--The flixel preloader is not accurate in Chrome. You can use it regularly if you embed the swf into a html file
-	<!--or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
+	or you can set the actual size of your file manually at "FlxPreloaderBase-onUpdate-bytesTotal"!-->
 	<app preloader="flixel.system.FlxPreloader" />
 
 	<!--Minimum without FLX_NO_GAMEPAD: 11.8, without FLX_NO_NATIVE_CURSOR: 11.2 -->
 	<set name="SWF_VERSION" value="11.8" />
-	<set name="next" />
-	<!--------------------------------WINDOW SETTINGS------------------------------->
+	
+	<!-- ____________________________ Window Settings ___________________________ -->
 
 	<!--These window settings apply to all targets-->
 	<window width="720" height="330" fps="60" background="#000000" hardware="true" vsync="true" />
@@ -25,24 +25,19 @@
 	<!--Mobile-specific-->
 	<window if="mobile" orientation="landscape" fullscreen="true" />
 
-	<!--------------------------------PATHS SETTINGS-------------------------------->
+	<!-- _____________________________ Path Settings ____________________________ -->
 
 	<set name="BUILD_DIR" value="export" />
 	<classpath name="source" />
 	<assets path="assets/images" include="*.png|*.jpg" type="image" embed="true" />
-
-	<assets path="assets/sounds" include="*.ogg" unless="flash" type="music" embed="false" />
-	<assets path="assets/sounds" include="*.mp3" if="flash" type="music" embed="true" />
-
-	<assets path="assets/notes" include="*.ogg" rename="notes" unless="flash" type="sound" embed="false" />
-	<assets path="assets/notes" include="*.mp3" rename="notes" if="flash" type="sound" embed="true" />
-
+	<assets path="assets/sounds" include="*.ogg" type="music" embed="false" />
+	<assets path="assets/notes" include="*.ogg" rename="notes" type="sound" embed="false" />
 	<assets path="assets/data" rename="data" include="*.txt" type="text" embed="true" />
 	<assets path="assets/fonts" include="*.ttf" embed="true" />
 
 	<assets path="assets/config" unless="flash" include="*.cfg" type="text" rename="config" embed="false" />
 
-	<!--------------------------------LIBRARIES------------------------------------->
+	<!-- _______________________________ Libraries ______________________________ -->
 
 	<haxelib name="flixel"/>
 
@@ -55,7 +50,7 @@
 	<!--In case you want to use nape with flixel-->
 	<!--haxelib name="nape" /-->
 
-	<!--------------------------------HAXEDEFINES----------------------------------->
+	<!-- ______________________________ Haxedefines _____________________________ -->
 
 	<!--Enable the Flixel core recording system-->
 	<!--haxedef name="FLX_RECORD" /-->
@@ -67,9 +62,9 @@
 	<!--haxedef name="FLX_NO_NATIVE_CURSOR" /-->
 
 	<!--Optimise inputs, be careful you will get null errors if you don't use conditionals in your game-->
-	<haxedef name="FLX_NO_MOUSE" if="mobile" />
+	<haxedef name="FLX_NO_MOUSE"	if="mobile" />
 	<haxedef name="FLX_NO_KEYBOARD" if="mobile" />
-	<haxedef name="FLX_NO_TOUCH" if="desktop" />
+	<haxedef name="FLX_NO_TOUCH"	if="desktop" />
 	<!-- haxedef name="FLX_NO_GAMEPAD" /-->
 
 	<!--Disable the Flixel core sound tray-->
@@ -89,7 +84,7 @@
 
 	<haxedef name="next" />
 
-	<!--------------------------------CUSTOM---------------------------------------->
+	<!-- _________________________________ Custom _______________________________ -->
 
 	<icon path="assets/icons/Icon-16.png" height="16" width="16" />
 	<icon path="assets/icons/Icon-24.png" height="24" width="24" />

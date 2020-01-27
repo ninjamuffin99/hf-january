@@ -180,3 +180,5 @@ win-*.zip
 mac-*.zip
 downloads
 *.swf
+january/.vscode/
+*.code-workspace

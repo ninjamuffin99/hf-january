@@ -1,14 +1,9 @@
 package snowflakes;
 import flixel.FlxG;
-import music.Key;
-import music.Mode;
 import music.Note;
-import music.Pedal;
-import music.Playback;
-import music.Scale;
 
-class Small extends Snowflake
-{
+/** Plays a regular note. */
+class Small extends Snowflake {
 
 	public function new() {
 
@@ -23,10 +18,9 @@ class Small extends Snowflake
 		playsNote = true;
 	}
 
-	public override function onLick():Void
-	{
+	public override function onLick():Void {
+
 		super.onLick();
 		playNote();
 	}
-
 }

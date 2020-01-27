@@ -1,8 +1,7 @@
 package music;
 import flixel.FlxG;
 
-class Key
-{
+class Key {
 
 	/* Musical keys, stored in Arrays. */
 	public static var C_MAJOR		: Array<String> = ["C Major", "C1", "D1", "E1", "F1", "G1", "A1", "B1", "C2", "D2", "E2", "F2", "G2", "A2", "B2", "C3", "D3", "E3", "F3", "G3", "A3", "B3", "C4", "D4", "E4", "F4", "G4", "A4", "B4"];
@@ -23,28 +22,30 @@ class Key
 	public static function change():Void
 	{
 		var newIndex:Int = FlxG.random.int(0, DATABASE.length - 1);
+		
 		while (newIndex == index)
 			newIndex = FlxG.random.int(0, DATABASE.length - 1);
+		
 		index = newIndex;
 		current = DATABASE[index][0];
 		Intervals.updated = false;
 		Intervals.populate();
 
 		// Prevent tensions on playback mode key changes.
-		if (Playback.mode == "Repeat")
-		{
+		if (Playback.mode == "Repeat") {
+
 			var currentInterval:String = Playback.sequence[Playback.index];
 			var avoidIntervals: Array<String> = ["two1", "for1", "six1", "for2", "six2", "for3", "six3"];
 
-			for (intervalToAvoid in avoidIntervals)
-			{
-				if (currentInterval == intervalToAvoid)
-				{
+			for (intervalToAvoid in avoidIntervals) {
+
+				if (currentInterval == intervalToAvoid) {
+
 					// Shift the interval for the next note to be played up or down one spot, to a chord tone.
-					for (i in 0...Intervals.DATABASE.length)
-					{
-						if (currentInterval == Intervals.DATABASE[i])
-						{
+					for (i in 0...Intervals.DATABASE.length) {
+
+						if (currentInterval == Intervals.DATABASE[i]) {
+
 							Playback.sequence[Playback.index] = Intervals.DATABASE[i + FlxG.random.sign()];
 							break;
 						}
@@ -54,12 +55,11 @@ class Key
 		}
 
 		justChanged = true;
-
 		HUD.logMode();
 	}
 
-	public static function cycle():Void
-	{
+	public static function cycle():Void {
+
 		change();
 		PlayState.txtScales.show(HUD.modeName);
 	}
