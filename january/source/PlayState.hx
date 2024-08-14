@@ -3,7 +3,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.group.FlxGroup;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.tile.FlxTilemap;
 import music.Key;
 import music.MIDI;
@@ -385,7 +385,7 @@ class PlayState extends FlxState {
 			if (Reg.inputJustPressed(Reg.ACT_HUD))					HUD.toggle();
 			if (Reg.inputJustPressed(Reg.ACT_SAVE))					HUD.midi();
 
-			#if (!flash && !FLX_NO_KEYBOARD)
+			#if (!web && !FLX_NO_KEYBOARD)
 			if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S)	MIDI.generate();
 			if (FlxG.keys.justPressed.F)								FlxG.fullscreen = !FlxG.fullscreen;
 			if (FlxG.keys.justPressed.ESCAPE)							HUD.promptExit();
