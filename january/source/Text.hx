@@ -4,9 +4,9 @@ import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import music.Playback;
 import music.Note;
 import music.Pedal;
+import music.Playback;
 
 class Text extends FlxText {
 
@@ -79,7 +79,8 @@ class Text extends FlxText {
 		x = PlayState.player.x;
 		y = PlayState.player.y - 10;
 
-		if (PlayState.player.facing == FlxObject.LEFT) {
+		if (PlayState.player.facing == LEFT)
+		{
 
 			x-= width;// + offset;
 

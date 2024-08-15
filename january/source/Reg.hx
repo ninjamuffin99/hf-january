@@ -1,8 +1,8 @@
 package;
 
-import flixel.math.FlxVector;
 import flixel.FlxG;
 import flixel.input.FlxInput.FlxInputState;
+import flixel.math.FlxPoint;
 import openfl.Assets;
 
 class Reg {
@@ -113,8 +113,8 @@ class Reg {
 	#if !FLX_NO_GAMEPAD
 	public static function stickCheck():Void {
 
-		var axesL:FlxVector = FlxG.gamepads.lastActive.getAnalogAxes(LEFT_ANALOG_STICK);
-		var axesR:FlxVector = FlxG.gamepads.lastActive.getAnalogAxes(RIGHT_ANALOG_STICK);
+		var axesL:FlxPoint = FlxG.gamepads.lastActive.getAnalogAxes(LEFT_ANALOG_STICK);
+		var axesR:FlxPoint = FlxG.gamepads.lastActive.getAnalogAxes(RIGHT_ANALOG_STICK);
 
 		wasLeftStickX  = axesL.x < -DEADZONE ? -1 : axesL.x > DEADZONE ? 1 : 0;
 		wasLeftStickY  = axesL.y < -DEADZONE ? -1 : axesL.y > DEADZONE ? 1 : 0;

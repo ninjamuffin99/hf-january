@@ -1,8 +1,8 @@
 package;
 
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxG;
 
 class Player extends FlxSprite {
 
@@ -23,8 +23,8 @@ class Player extends FlxSprite {
 
 		super(x, y);
 		loadGraphic(AssetPaths.player1__png, true, 16, 33);
-		setFacingFlip(FlxObject.LEFT, true, false);
-		setFacingFlip(FlxObject.RIGHT, false, false);
+		setFacingFlip(LEFT, true, false);
+		setFacingFlip(RIGHT, false, false);
 		width    = 10;
 		height   = 3;
 		offset.x = 4;
@@ -70,13 +70,13 @@ class Player extends FlxSprite {
 			
 		if (left) {
 
-			facing = FlxObject.LEFT;
+			facing = LEFT;
 			SnowflakeManager.timbre = "Secondary";
 			velocity.x = -maxVelocity.x;
 		}
 		else if (right) {
 
-			facing = FlxObject.RIGHT;
+			facing = RIGHT;
 			SnowflakeManager.timbre = "Primary";
 			velocity.x = maxVelocity.x;
 		}

@@ -1,18 +1,30 @@
 #!/bin/bash
 set -e
-if [ ! -f ~/neko/neko-2.0.0-linux64.tar.gz ]; then
+
+# Set up Neko (latest version)
+if [ ! -f ~/neko/neko-latest.tar.gz ]; then
   mkdir -p ~/neko
-  curl -s -L --retry 3 'http://nekovm.org/_media/neko-2.0.0-linux64.tar.gz' | tar -C ~/neko -x -z --strip-components=1 -f -
+  curl -s -L --retry 3 'https://github.com/HaxeFoundation/neko/releases/latest/download/neko-linux64.tar.gz' -o ~/neko/neko-latest.tar.gz
+  tar -C ~/neko -xzf ~/neko/neko-latest.tar.gz --strip-components=1
 fi
-if [ ! -f ~/haxe/haxe-3.2.0-linux64.tar.gz ]; then
+
+# Set up Haxe (latest version)
+if [ ! -f ~/haxe/haxe-latest-linux64.tar.gz ]; then
   mkdir -p ~/haxe
-  curl -s -L --retry 3 'http://haxe.org/website-content/downloads/3.2.0/downloads/haxe-3.2.0-linux64.tar.gz' | tar -C ~/haxe -x -z --strip-components=1 -f -
+  curl -s -L --retry 3 'https://build.haxe.org/builds/haxe/latest/haxe-linux64.tar.gz' -o ~/haxe/haxe-latest-linux64.tar.gz
+  tar -C ~/haxe -xzf ~/haxe/haxe-latest-linux64.tar.gz --strip-components=1
 fi
-mkdir -p ~/haxe/lib
+
+# Set up haxelib (standard location)
 haxelib setup ~/haxe/lib
-haxelib install lime > /dev/null
-haxelib install openfl > /dev/null
-haxelib install hxcpp > /dev/null
-haxelib git flixel https://github.com/HaxeFlixel/flixel > /dev/null
-haxelib git flixel-addons https://github.com/HaxeFlixel/flixel-addons > /dev/null
-haxelib git flixel-tools https://github.com/HaxeFlixel/flixel-tools > /dev/null
+
+# Install libraries
+haxelib install lime
+haxelib install openfl
+haxelib install hxcpp
+haxelib install flixel
+haxelib install flixel-addons
+haxelib install flixel-tools
+
+# Optionally, you can update all libraries to the latest versions:
+haxelib upgrade

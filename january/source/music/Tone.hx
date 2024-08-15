@@ -1,7 +1,7 @@
 package music;
-import flixel.tweens.FlxTween;
-import flixel.system.FlxSound;
 import flixel.FlxG;
+import flixel.sound.FlxSound;
+import flixel.tweens.FlxTween;
 
 class Tone extends FlxSound {
 	
