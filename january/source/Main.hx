@@ -38,10 +38,10 @@ class Main extends Sprite {
 			gameHeight = Math.ceil(stageHeight / zoom);
 		}
 
-		Reg.initControls();
-		addChild(new FlxGame(gameWidth, gameHeight, initialState, zoom, framerate, framerate, skipSplash, startFullscreen));
+		Reg.initControls();		
+		addChild(new FlxGame(gameWidth, gameHeight, initialState, framerate, framerate, skipSplash, startFullscreen));
 
-		FlxG.scaleMode = new flixel.system.scaleModes.PixelPerfectScaleMode();
+		// FlxG.scaleMode = new flixel.system.scaleModes.PixelPerfectScaleMode();
 
 		#if !FLX_NO_KEYBOARD
 		FlxG.sound.muteKeys = null;

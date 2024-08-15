@@ -192,7 +192,7 @@ class Reg {
 		ActionsButtons.push(BTN_DEFAULT_ANY);
 		#end
 
-		#if !flash
+		#if !web
 		var strConfig:String = Assets.getText("config/Controls.cfg");
 		var match:EReg = ~/^([A-Z_]*)\s+=\s+([A-Z_,\s]*)$/gm;
 
